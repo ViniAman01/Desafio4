@@ -2,6 +2,7 @@ package makePDF
 
 import (
 	"fmt"
+
 	"github.com/jung-kurt/gofpdf"
 )
 
@@ -21,7 +22,7 @@ func Capa(pdf *gofpdf.Fpdf, title string, subtitle string, author string, img st
 	pdf.AddPage()
 	pdf.ImageOptions(img, 0, 0, pageWidth, pageHeight, false, gofpdf.ImageOptions{}, 0, "")
 
-	var utf_8 = pdf.UnicodeTranslatorFromDescriptor("")
+	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
 
 	pdf.SetTextColor(192, 192, 192)
 	pdf.SetFont(font, "B", 36)
@@ -42,7 +43,6 @@ func Capa(pdf *gofpdf.Fpdf, title string, subtitle string, author string, img st
 	center = (Width - titleWidth) / 2.0
 	pdf.Text(center, 250, utf_8(author))
 
-	return
 }
 
 func PageIntroduction(pdf *gofpdf.Fpdf) {
@@ -114,7 +114,7 @@ func NewPagImg(pdf *gofpdf.Fpdf, imgPath string, description string) {
 
 func AddBlockText(pdf *gofpdf.Fpdf, text string, y float64, yPage float64) {
 
-	var utf_8 = pdf.UnicodeTranslatorFromDescriptor("")
+	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
 
 	pdf.SetMargins(marginLeft, marginTop, marginRight)
 
