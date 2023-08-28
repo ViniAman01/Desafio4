@@ -66,7 +66,7 @@ func PageIntroduction(pdf *gofpdf.Fpdf) {
 
 	AddBlockText(pdf, introducao, 5.5, 90)
 
-	pdf.Image("./img/logo.jpeg", 86.5, 240, 40, 40, false, "", 0, "")
+	pdf.Image("./files/logo.jpeg", 86.5, 240, 40, 40, false, "", 0, "")
 
 	pdf.SetFont(font, "", 12)
 	pdf.Text(pageWidth/2, 290, fmt.Sprint(numberPage))
