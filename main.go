@@ -91,6 +91,4 @@ func downloadFile(bucket gridfs.Bucket, idFile string, name string) {
 	fmt.Println("Download realizado com sucesso!")
 }
 
-func main() {
-
-}
+//teste
