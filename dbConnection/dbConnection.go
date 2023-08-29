@@ -43,7 +43,7 @@ func GetBucket(db *mongo.Database) *gridfs.Bucket {
 	return bucket
 }
 
-func InsetColl(coll *mongo.Collection, media models.Media) *mongo.InsertOneResult {
+func InsertColl(coll *mongo.Collection, media models.Media) *mongo.InsertOneResult {
 	result, err := coll.InsertOne(context.Background(), media)
 
 	if err != nil {
