@@ -52,7 +52,7 @@ func getBucket(db *mongo.Database) *gridfs.Bucket {
 	return bucket
 }
 
-func insetColl(coll *mongo.Collection, media Media) *mongo.InsertOneResult {
+func insertColl(coll *mongo.Collection, media Media) *mongo.InsertOneResult {
 	result, err := coll.InsertOne(context.Background(), media)
 
 	if err != nil {
@@ -91,4 +91,45 @@ func downloadFile(bucket gridfs.Bucket, idFile string, name string) {
 	fmt.Println("Download realizado com sucesso!")
 }
 
-//teste
+var media = Media{
+	Data_type: "tipoA",
+	Code_book: "12345",
+	Description_page: "cover_page",
+	Data: "informações",
+}
+
+var media2 = Media{
+	Data_type: "tipoB",
+	Code_book: "12345",
+	Description_page: "page2",
+	Data: "informações",
+}
+
+var media3 = Media{
+	Data_type: "tipoC",
+	Code_book: "12345",
+	Description_page: "page3",
+	Data: "informações",
+}
+
+var media4 = Media{
+	Data_type: "tipoD",
+	Code_book: "12345",
+	Description_page: "page4",
+	Data: "informações",
+}
+
+var medias = []Media{media,media2,media3,media4}
+
+func main(){
+
+	client := connectDB()
+
+	coll := getCollection("dbteste2", "collteste", client)
+
+	for _,media := range medias {
+		insertColl(coll,media)
+	}
+
+	fmt.Println(coll)
+}
