@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+  code_book := "12345"
   ctrl.CoverHandler()
-  ctrl.PageHandler()
+  ctrl.PageHandler(code_book)
 }

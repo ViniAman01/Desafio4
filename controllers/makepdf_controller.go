@@ -1,10 +1,12 @@
 package controllers
 
 import (
-	"github.com/jung-kurt/gofpdf"
-  "fmt"
-  "project/models"
+	"fmt"
 	db "project/database"
+	"project/models"
+
+	"github.com/jung-kurt/gofpdf"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 var pdf = gofpdf.New("P", "mm", "A4", "")
@@ -22,9 +24,14 @@ func CoverHandler() {
 	PageIntroduction(pdf)
 }
 
-func PageHandler() {
+func PageHandler(code_book string) {
+
 	for _, description_page := range models.DescriptionsPage {
-		media, err := db.FindDoc(coll, "description_page", description_page)
+		filter := bson.D{
+			{"description_page", description_page},
+      {"code_book",code_book},
+		}
+		media, err := db.FindDoc(coll,filter)
 
 		if err == nil {
 			fmt.Println(media.Data_type)
@@ -37,10 +44,12 @@ func PageHandler() {
 				fmt.Println(media.Data)
 				NewPagImg(pdf, media.Data, "Uma legenda")
 			}
-		}
+		}else {
+      fmt.Println(err)
+    }
 	}
 
-  err := pdf.OutputFileAndClose("exemplo.pdf")
+	err := pdf.OutputFileAndClose("exemplo.pdf")
 
 	if err != nil {
 		fmt.Println(err)
