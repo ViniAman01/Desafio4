@@ -7,12 +7,13 @@ import (
 	"io"
 	"log"
 	"os"
+	"project/models"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
-  "project/models"
 )
 
 func ConnectDB() *mongo.Client {
@@ -79,5 +80,21 @@ func DownloadFile(bucket gridfs.Bucket, idFile string, name string) {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Download realizado com sucesso!")
+	fmt.Println("Successful download.")
+}
+
+func FindDoc(coll *mongo.Collection, field string, data string) (models.Media, error) {
+	filter := bson.D{{field, data}}
+
+	var result models.Media
+
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+      fmt.Println("Not found.")
+		}
+	}
+
+  return result, err
 }
