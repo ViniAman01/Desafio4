@@ -29,9 +29,9 @@ func PageHandler(code_book string) {
 	for _, description_page := range models.DescriptionsPage {
 		filter := bson.D{
 			{"description_page", description_page},
-      {"code_book",code_book},
+			{"code_book", code_book},
 		}
-		media, err := db.FindDoc(coll,filter)
+		media, err := db.FindDoc(coll, filter)
 
 		if err == nil {
 			fmt.Println(media.Data_type)
@@ -44,9 +44,9 @@ func PageHandler(code_book string) {
 				fmt.Println(media.Data)
 				NewPagImg(pdf, media.Data, "Uma legenda")
 			}
-		}else {
-      fmt.Println(err)
-    }
+		} else {
+			fmt.Println(err)
+		}
 	}
 
 	err := pdf.OutputFileAndClose("exemplo.pdf")

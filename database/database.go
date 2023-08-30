@@ -83,8 +83,7 @@ func DownloadFile(bucket gridfs.Bucket, idFile string, name string) {
 	fmt.Println("Successful download.")
 }
 
-func FindDoc(coll *mongo.Collection, field string, data string) (models.Media, error) {
-	filter := bson.D{{field, data}}
+func FindDoc(coll *mongo.Collection, filter bson.D) (models.Media, error) {
 
 	var result models.Media
 
