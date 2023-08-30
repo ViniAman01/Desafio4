@@ -1,8 +1,7 @@
-package makePDF
+package controllers
 
 import (
 	"fmt"
-
 	"github.com/jung-kurt/gofpdf"
 )
 

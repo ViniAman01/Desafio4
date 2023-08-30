@@ -1,4 +1,4 @@
-package dbConnection
+package database
 
 import (
 	"bytes"

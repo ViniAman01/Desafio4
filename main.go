@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/jung-kurt/gofpdf"
-	"project/dbConnection"
-	"project/makePDF"
+	db "project/database"
+	mpdf "project/controllers"
 	"project/models"
 )
 
@@ -17,24 +17,24 @@ func main() {
 	subtitle := "Ler e Sonhar"
 	author := "Equipe Estante Mágica"
 
-	makePDF.Capa(pdf, title, subtitle, author, imagemcapa)
-	makePDF.PageIntroduction(pdf)
+	mpdf.Capa(pdf, title, subtitle, author, imagemcapa)
+	mpdf.PageIntroduction(pdf)
 
 	historyTitle := ""
 
-	client := dbConnection.ConnectDB()
-	coll := dbConnection.GetCollection("mainDB2", "collteste", client)
+	client := db.ConnectDB()
+	coll := db.GetCollection("mainDB2", "collteste", client)
 
 	for _, description_page := range models.DescriptionsPage {
-		media, err := dbConnection.FindDoc(coll, "description_page", description_page)
+		media, err := db.FindDoc(coll, "description_page", description_page)
 		if err == nil {
 			fmt.Println(media.Data_type)
 			if media.Data_type == "text" {
-				makePDF.NewPagTextSimple(pdf, historyTitle, media.Data)
+				mpdf.NewPagTextSimple(pdf, historyTitle, media.Data)
 			}
 			if media.Data_type == "image" {
 				fmt.Println(media.Data)
-				makePDF.NewPagImg(pdf, media.Data, "Uma legenda")
+				mpdf.NewPagImg(pdf, media.Data, "Uma legenda")
 			}
 		}
 	}

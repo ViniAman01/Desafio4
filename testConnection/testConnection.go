@@ -1,7 +1,7 @@
 package main
 
 import (
-	"project/dbConnection"
+	db "project/database"
 	"project/models"
 )
 
@@ -57,11 +57,11 @@ var media7 = models.Media{
 var medias = []models.Media{media, media2, media3, media4, media5, media6, media7}
 
 func main() {
-	client := dbConnection.ConnectDB()
+	client := db.ConnectDB()
 
-	coll := dbConnection.GetCollection("mainDB2", "collteste", client)
+	coll := db.GetCollection("mainDB2", "collteste", client)
 
 	for _, data := range medias {
-		dbConnection.InsertColl(coll, data)
+		db.InsertColl(coll, data)
 	}
 }
