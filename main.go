@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/jung-kurt/gofpdf"
 	"project/dbConnection"
 	"project/makePDF"
@@ -24,11 +25,16 @@ func main() {
 	client := dbConnection.ConnectDB()
 	coll := dbConnection.GetCollection("mainDB2", "collteste", client)
 
-	for _, dp := range models.DescriptionsPage {
-		media, err := dbConnection.FindDoc(coll, "description_page", dp)
+	for _, description_page := range models.DescriptionsPage {
+		media, err := dbConnection.FindDoc(coll, "description_page", description_page)
 		if err == nil {
+			fmt.Println(media.Data_type)
 			if media.Data_type == "text" {
 				makePDF.NewPagTextSimple(pdf, historyTitle, media.Data)
+			}
+			if media.Data_type == "image" {
+				fmt.Println(media.Data)
+				makePDF.NewPagImg(pdf, media.Data, "Uma legenda")
 			}
 		}
 	}

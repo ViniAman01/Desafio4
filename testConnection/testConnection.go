@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "fmt"
 	"project/dbConnection"
 	"project/models"
 )
@@ -14,27 +13,48 @@ var media = models.Media{
 }
 
 var media2 = models.Media{
-	Data_type:        "text",
+	Data_type:        "image",
 	Code_book:        "12345",
 	Description_page: "page2",
-	Data:             `Serenidade continuava a ser um refúgio de tranquilidade, envolto em suas paisagens pitorescas e no ritmo sereno de suas ruas calmas. A loja "Surpresas Mágicas" permanecia no coração da cidade, com suas janelas convidativas que exibiam uma miríade de tesouros encantados. Cada objeto na loja contava uma história única, uma história que esperava ser desvendada por aqueles que tinham olhos curiosos. As pessoas vinham de todas as partes para explorar suas prateleiras, em busca daquela surpresa que poderia iluminar os olhos de um ente querido. Uma manhã ensolarada trouxe consigo uma brisa suave que acariciava as folhas das árvores e as flores em flor. Era nesse cenário que Clara, uma jovem artista com um coração cheio de sonhos, decidiu visitar a loja. Ela estava à procura de algo especial para seu irmão mais novo, Mateus, que estava prestes a completar dez anos. Mateus sempre foi fascinado por histórias de aventuras e mundos mágicos. Clara se aventurou na loja, seus olhos dançando entre os objetos curiosos. Foi então que ela viu: um globo de neve com uma réplica encantadora de um navio pirata em seu interior, capturando a essência de um conto de fadas.`,
+	Data:             "./files/lendo_livro.jpg",
 }
 
 var media3 = models.Media{
 	Data_type:        "text",
 	Code_book:        "12345",
 	Description_page: "page3",
-	Data:             "Sr. Higgins, o amável proprietário da loja, notou o brilho nos olhos de Clara e se aproximou. Com um aceno acolhedor, ele compartilhou a história por trás daquele globo de neve. Era uma história sobre coragem, descobertas e a jornada de um jovem pirata em busca de um tesouro perdido. Clara soube imediatamente que era o presente perfeito para Mateus, uma lembrança tangível de que a imaginação poderia ganhar vida. Ela agradeceu a Sr. Higgins e saiu da loja, sabendo que aquele presente traria alegria ao coração do irmão no dia de seu aniversário.",
+	Data:             `Serenidade continuava a ser um refúgio de tranquilidade, envolto em suas paisagens pitorescas e no ritmo sereno de suas ruas calmas. A loja "Surpresas Mágicas" permanecia no coração da cidade, com suas janelas convidativas que exibiam uma miríade de tesouros encantados. Cada objeto na loja contava uma história única, uma história que esperava ser desvendada por aqueles que tinham olhos curiosos. As pessoas vinham de todas as partes para explorar suas prateleiras, em busca daquela surpresa que poderia iluminar os olhos de um ente querido. Uma manhã ensolarada trouxe consigo uma brisa suave que acariciava as folhas das árvores e as flores em flor. Era nesse cenário que Clara, uma jovem artista com um coração cheio de sonhos, decidiu visitar a loja. Ela estava à procura de algo especial para seu irmão mais novo, Mateus, que estava prestes a completar dez anos. Mateus sempre foi fascinado por histórias de aventuras e mundos mágicos. Clara se aventurou na loja, seus olhos dançando entre os objetos curiosos. Foi então que ela viu: um globo de neve com uma réplica encantadora de um navio pirata em seu interior, capturando a essência de um conto de fadas.`,
 }
 
 var media4 = models.Media{
-	Data_type:        "text",
+	Data_type:        "image",
 	Code_book:        "12345",
 	Description_page: "page4",
+	Data:             "./files/car.jpg",
+}
+
+var media5 = models.Media{
+	Data_type:        "text",
+	Code_book:        "12345",
+	Description_page: "page5",
+	Data:             "Sr. Higgins, o amável proprietário da loja, notou o brilho nos olhos de Clara e se aproximou. Com um aceno acolhedor, ele compartilhou a história por trás daquele globo de neve. Era uma história sobre coragem, descobertas e a jornada de um jovem pirata em busca de um tesouro perdido. Clara soube imediatamente que era o presente perfeito para Mateus, uma lembrança tangível de que a imaginação poderia ganhar vida. Ela agradeceu a Sr. Higgins e saiu da loja, sabendo que aquele presente traria alegria ao coração do irmão no dia de seu aniversário.",
+}
+
+var media6 = models.Media{
+	Data_type:        "image",
+	Code_book:        "12345",
+	Description_page: "page6",
+	Data:             "./files/3b1b.jpeg",
+}
+
+var media7 = models.Media{
+	Data_type:        "text",
+	Code_book:        "12345",
+	Description_page: "page7",
 	Data:             "O dia do aniversário de Mateus finalmente chegou, trazendo consigo risos contagiantes e a promessa de uma celebração repleta de felicidade. Clara entregou o presente a Mateus, cujos olhos se arregalaram de admiração ao ver o globo de neve. Ele girou o objeto entre suas mãos pequenas e logo se viu imerso na história que Sr. Higgins compartilhara.",
 }
 
-var medias = []models.Media{media, media2, media3, media4}
+var medias = []models.Media{media, media2, media3, media4, media5, media6, media7}
 
 func main() {
 	client := dbConnection.ConnectDB()
