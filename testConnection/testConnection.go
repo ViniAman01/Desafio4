@@ -16,7 +16,7 @@ var media2 = models.Media{
 	Data_type:        "image",
 	Code_book:        "12345",
 	Description_page: "page2",
-	Data:             "./files/lendo_livro.jpg",
+	Data:             "./static/lendo_livro.jpg",
 }
 
 var media3 = models.Media{
@@ -30,7 +30,7 @@ var media4 = models.Media{
 	Data_type:        "image",
 	Code_book:        "12345",
 	Description_page: "page4",
-	Data:             "./files/car.jpg",
+	Data:             "./static/car.jpg",
 }
 
 var media5 = models.Media{
@@ -44,7 +44,7 @@ var media6 = models.Media{
 	Data_type:        "image",
 	Code_book:        "12345",
 	Description_page: "page6",
-	Data:             "./files/3b1b.jpeg",
+	Data:             "./static/3b1b.jpeg",
 }
 
 var media7 = models.Media{
