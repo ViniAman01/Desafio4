@@ -2,154 +2,113 @@ package controllers
 
 import (
 	"fmt"
-	"image"
-	"os"
 
 	"github.com/jung-kurt/gofpdf"
 )
 
-var pageWidth = 210.0
-var pageHeight = 297.0
-var scale float64
+var pageWidth = 200.0
+var pageHeight = 200.0
 
 var marginLeft = 30.0
 var marginRight = 30.0
 var marginTop = 30.0
 
-var numberPage = 1
+var numberPage int
 var font = "times"
 
-func Capa(pdf *gofpdf.Fpdf, title string, img string) {
+func PageCover(pdf *gofpdf.Fpdf, title string, imgPath string) {
 
 	pdf.AddPage()
-	pdf.ImageOptions(img, 0, 0, pageWidth, pageHeight, false, gofpdf.ImageOptions{}, 0, "")
+	numberPage++
+
+	pdf.ImageOptions(imgPath, 0, 0, pageWidth, pageHeight, false, gofpdf.ImageOptions{}, 0, "")
 
 	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
 
-	pdf.SetTextColor(192, 192, 192)
 	pdf.SetFont(font, "B", 36)
-	titleWidth := pdf.GetStringWidth(title)
-	Width, _ := pdf.GetPageSize()
-	center := (Width - titleWidth) / 2.0
-	pdf.Text(center, 90, utf_8(title))
-}
-
-func PageIntroduction(pdf *gofpdf.Fpdf) {
-
-	title := "LIVRO CRIADO REFERENTE AO DESAFIO 4"
-	introducao := `Este livro foi produzido pela equipe de estagiários da Estante Mágica. Agradecemos a todos pelo bom trabalho, esperamos que o livro esteja de acordo com o desafio proposto.`
-
-	pdf.AddPage()
-	pdf.SetMargins(marginLeft, marginTop, marginRight)
-
-	numberPage++
-	pdf.SetFont(font, "I", 20)
-	pdf.SetTextColor(0, 0, 0)
+	pdf.SetTextColor(192, 192, 192)
 
 	titleWidth := pdf.GetStringWidth(title)
 	Width, _ := pdf.GetPageSize()
 	center := (Width - titleWidth) / 2.0
 
-	pdf.Text(center, 45, title)
-	pdf.Text(center, 60, "_______________________________________")
-
-	AddBlockText(pdf, introducao, 5.5, 90)
-
-	pdf.Image("./static/logo.jpeg", 86.5, 240, 40, 40, false, "", 0, "")
-
-	pdf.SetFont(font, "", 12)
-	pdf.Text(pageWidth/2, 290, fmt.Sprint(numberPage))
+	pdf.Text(center, 80, utf_8(title))
 }
 
 func PageBiography(pdf *gofpdf.Fpdf, author string) {
 
 	pdf.AddPage()
+	numberPage++
 
 	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
 
-	pdf.SetFont(font, "I", 20)
+	pdf.SetFont(font, "I", 24)
 	pdf.SetTextColor(0, 0, 0)
 
 	titleWidth := pdf.GetStringWidth(utf_8(author))
 	Width, _ := pdf.GetPageSize()
 	center := (Width - titleWidth) / 2.0
 
-	pdf.Text(center, 130, utf_8(author))
-
+	pdf.Text(center, 90, utf_8(author))
 }
 
-func NewPagTextSimple(pdf *gofpdf.Fpdf, text string) {
+func PageIntroduction(pdf *gofpdf.Fpdf) {
+
+	title := "LIVRO CRIADO REFERENTE AO DESAFIO 4"
+	introduction := `Este livro foi produzido pela equipe de estagiários da Estante Mágica. Agradecemos a todos pelo bom trabalho, esperamos que o livro esteja de acordo com o desafio proposto.`
 
 	pdf.AddPage()
+	numberPage++
+
+	pdf.SetMargins(marginLeft, marginTop, marginRight)
 
 	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
 
+	pdf.SetFont(font, "I", 20)
+	pdf.SetTextColor(0, 0, 0)
+
+	titleWidth := pdf.GetStringWidth(title)
+	Width, _ := pdf.GetPageSize()
+	center := (Width - titleWidth) / 2.0
+
+	pdf.Text(center, marginTop, title)
+
+	pdf.SetFont(font, "", 16)
+	pdf.Text(center, marginTop+10, "________________________________________________")
+
+	pdf.SetY(marginTop + 30)
+	pdf.MultiCell(0, 6, utf_8(introduction), "", "", false)
+
+	pdf.Image("./static/logo.jpeg", 80, 130, 40, 40, false, "", 0, "")
+
+	pdf.SetFont(font, "", 14)
+	pdf.Text(100, 190, fmt.Sprint(numberPage))
+}
+
+func NewPageText(pdf *gofpdf.Fpdf, text string) {
+
+	pdf.AddPage()
 	numberPage++
-	pdf.SetFont(font, "", 12)
-	pdf.Text(105, 290, fmt.Sprint(numberPage))
+
 	pdf.SetMargins(marginLeft, marginTop, marginRight)
 
-	pdf.SetFont(font, "", 12)
+	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
+
+	pdf.SetFont(font, "", 16)
+	pdf.SetTextColor(0, 0, 0)
+
 	pdf.SetY(marginTop)
 	pdf.MultiCell(0, 5.5, utf_8(text), "", "", false)
+
+	pdf.SetFont(font, "", 14)
+	pdf.Text(100, 190, fmt.Sprint(numberPage))
 }
 
-func NewPagImg(pdf *gofpdf.Fpdf, imgPath string, description string) {
-
+func NewPageImg(pdf *gofpdf.Fpdf, imgPath string) {
 	pdf.AddPage()
-
-	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
-
-	imageWidth, imageHeight := getImageDimension(imgPath)
-
-	if imageWidth/pageWidth > imageHeight/pageHeight {
-		scale = (pageWidth / imageWidth) / 1.2
-	} else {
-		scale = (pageHeight / imageHeight) / 1.2
-	}
-
-	newImgWidth := imageWidth * scale
-	newImgHeight := imageHeight * scale
-
-	marginPageWidth := pageWidth - 2*marginRight
-	marginPageHeight := pageHeight - 2*marginTop
-
-	x_center := ((marginPageWidth - newImgWidth) / 2) + marginLeft
-	y_center := ((marginPageHeight - newImgHeight) / 2) + marginTop
-
 	numberPage++
-	pdf.Text(105, 290, fmt.Sprint(numberPage))
-	pdf.SetMargins(marginLeft, marginTop, marginRight)
+	pdf.ImageOptions(imgPath, 0, 0, pageWidth, pageHeight, false, gofpdf.ImageOptions{}, 0, "")
 
-	pdf.Image(imgPath, x_center, y_center, newImgWidth, newImgHeight, true, "", 0, "")
-	pdf.SetFont(font, "I", 12)
-	pdf.Text(marginLeft, newImgHeight+35, utf_8(description))
-}
-
-func AddBlockText(pdf *gofpdf.Fpdf, text string, y float64, yPage float64) {
-
-	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
-
-	pdf.SetMargins(marginLeft, marginTop, marginRight)
-
-	pdf.SetFont(font, "", 12)
-	pdf.SetTextColor(10, 0, 0)
-	pdf.SetY(yPage)
-	pdf.MultiCell(0, y, utf_8(text), "", "L", false)
-
-}
-
-func getImageDimension(imagePath string) (float64, float64) {
-	file, err := os.Open(imagePath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-	}
-
-	defer file.Close()
-
-	image, _, err := image.DecodeConfig(file)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: %v\n", imagePath, err)
-	}
-	return float64(image.Width), float64(image.Height)
+	pdf.SetFont(font, "", 14)
+	pdf.Text(100, 190, fmt.Sprint(numberPage))
 }
