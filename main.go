@@ -6,44 +6,50 @@ import (
 	"github.com/jung-kurt/gofpdf"
 )
 
-var pageWidth = 210.0
-var pageHeight = 297.0
+var pageWidth = 200.0
+var pageHeight = 200.0
 
 var marginLeft = 30.0
 var marginRight = 30.0
 var marginTop = 30.0
-var marginLow = 30.0
 
-var numberPage = 1
+var numberPage int
 var font = "times"
 
-func capa(pdf *gofpdf.Fpdf, title string, subtitle string, author string, img string) {
+func PageCover(pdf *gofpdf.Fpdf, title string, imgPath string) {
 
 	pdf.AddPage()
-	pdf.ImageOptions(img, 0, 0, pageWidth, pageHeight, false, gofpdf.ImageOptions{}, 0, "")
+	numberPage++
 
-	var utf_8 = pdf.UnicodeTranslatorFromDescriptor("")
+	pdf.ImageOptions(imgPath, 0, 0, pageWidth, pageHeight, false, gofpdf.ImageOptions{}, 0, "")
 
-	pdf.SetTextColor(192, 192, 192)
+	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
+
 	pdf.SetFont(font, "B", 36)
+	pdf.SetTextColor(192, 192, 192)
+
 	titleWidth := pdf.GetStringWidth(title)
 	Width, _ := pdf.GetPageSize()
 	center := (Width - titleWidth) / 2.0
+
 	pdf.Text(center, 80, utf_8(title))
+}
 
-	pdf.SetTextColor(200, 100, 30)
-	pdf.SetFont(font, "B", 26)
-	titleWidth = pdf.GetStringWidth(subtitle)
-	center = (Width - titleWidth) / 2.0
-	pdf.Text(center, 90, utf_8(subtitle))
+func PageBiography(pdf *gofpdf.Fpdf, author string) {
 
-	pdf.SetTextColor(170, 100, 10)
-	pdf.SetFont(font, "I", 16)
-	titleWidth = pdf.GetStringWidth(author)
-	center = (Width - titleWidth) / 2.0
-	pdf.Text(center, 250, utf_8(author))
+	pdf.AddPage()
+	numberPage++
 
-	return
+	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
+
+	pdf.SetFont(font, "I", 24)
+	pdf.SetTextColor(0, 0, 0)
+
+	titleWidth := pdf.GetStringWidth(utf_8(author))
+	Width, _ := pdf.GetPageSize()
+	center := (Width - titleWidth) / 2.0
+
+	pdf.Text(center, 90, utf_8(author))
 }
 
 func PageIntroduction(pdf *gofpdf.Fpdf) {
@@ -52,9 +58,12 @@ func PageIntroduction(pdf *gofpdf.Fpdf) {
 	introducao := `Este livro foi produzido pela equipe de estagiários da Estante Mágica. Agradecemos a todos pelo bom trabalho, esperamos que o livro esteja de acordo com o desafio proposto.`
 
 	pdf.AddPage()
+	numberPage++
+
 	pdf.SetMargins(marginLeft, marginTop, marginRight)
 
-	numberPage++
+	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
+
 	pdf.SetFont(font, "I", 20)
 	pdf.SetTextColor(0, 0, 0)
 
@@ -62,87 +71,66 @@ func PageIntroduction(pdf *gofpdf.Fpdf) {
 	Width, _ := pdf.GetPageSize()
 	center := (Width - titleWidth) / 2.0
 
-	pdf.Text(center, 45, title)
-	pdf.Text(center, 60, "_______________________________________")
+	pdf.Text(center, marginTop, title)
 
-	addBlockText(pdf, introducao, 5.5, 90)
+	pdf.SetFont(font, "", 16)
+	pdf.Text(center, marginTop+10, "________________________________________________")
 
-	pdf.Image("./img/logo.jpeg", 86.5, 240, 40, 40, false, "", 0, "")
+	pdf.SetY(marginTop + 30)
+	pdf.MultiCell(0, 6, utf_8(introducao), "", "", false)
 
-	pdf.SetFont(font, "", 12)
-	pdf.Text(pageWidth/2, 290, fmt.Sprint(numberPage))
+	pdf.Image("./img/logo.jpeg", 80, 130, 40, 40, false, "", 0, "")
+
+	pdf.SetFont(font, "", 14)
+	pdf.Text(100, 190, fmt.Sprint(numberPage))
 }
 
-func newPagTextSimple(pdf *gofpdf.Fpdf, title string, text string) {
+func NewPageText(pdf *gofpdf.Fpdf, text string) {
 
 	pdf.AddPage()
+	numberPage++
+
+	pdf.SetMargins(marginLeft, marginTop, marginRight)
 
 	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
 
-	numberPage++
-	pdf.Text(105, 290, fmt.Sprint(numberPage))
-	pdf.SetMargins(marginLeft, marginTop, marginRight)
-
-	pdf.SetFont(font, "B", 32)
+	pdf.SetFont(font, "", 16)
 	pdf.SetTextColor(0, 0, 0)
 
-	titleWidth := pdf.GetStringWidth(title)
-	Width, _ := pdf.GetPageSize()
-
-	center := (Width - titleWidth) / 2.0
-
-	pdf.Text(center, 50, utf_8(title))
-
-	pdf.SetFont(font, "", 12)
-	pdf.SetY(70)
+	pdf.SetY(marginTop)
 	pdf.MultiCell(0, 5.5, utf_8(text), "", "", false)
+
+	pdf.SetFont(font, "", 14)
+	pdf.Text(100, 190, fmt.Sprint(numberPage))
 }
 
-func newPagImg(pdf *gofpdf.Fpdf, imgPath string, description string) {
-
+func NewPageImg(pdf *gofpdf.Fpdf, imgPath string) {
 	pdf.AddPage()
-
-	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
-
 	numberPage++
-	pdf.Text(105, 290, fmt.Sprint(numberPage))
-	pdf.SetMargins(marginLeft, marginTop, marginRight)
+	pdf.ImageOptions(imgPath, 0, 0, pageWidth, pageHeight, false, gofpdf.ImageOptions{}, 0, "")
 
-	pdf.Image(imgPath, 25, marginLeft+20, 160, 180, false, "", 0, "")
-	pdf.SetFont(font, "I", 12)
-	pdf.Text(25, 240, utf_8(description))
-}
-
-func addBlockText(pdf *gofpdf.Fpdf, text string, y float64, yPage float64) {
-
-	var utf_8 = pdf.UnicodeTranslatorFromDescriptor("")
-
-	pdf.SetMargins(marginLeft, marginTop, marginRight)
-
-	pdf.SetFont(font, "", 12)
-	pdf.SetTextColor(10, 0, 0)
-	pdf.SetY(yPage)
-	pdf.MultiCell(0, y, utf_8(text), "", "L", false)
-
+	pdf.SetFont(font, "", 14)
+	pdf.Text(100, 190, fmt.Sprint(numberPage))
 }
 
 func main() {
 
-	pdf := gofpdf.New("P", "mm", "A4", "")
+	pdf := gofpdf.NewCustom(&gofpdf.InitType{
+		Size: gofpdf.SizeType{
+			Wd: pageWidth,
+			Ht: pageHeight,
+		},
+	})
 
-	imagemcapa := "./img/estante01.jpg"
-	title := "ESTANTE MÁGICA"
-	subtitle := "Ler e Sonhar"
-	author := "Equipe Estante Mágica"
-
-	capa(pdf, title, subtitle, author, imagemcapa)
+	PageCover(pdf, "A fim de testes", "./img/estante01.jpg")
+	PageBiography(pdf, "Alguem qualquer")
 	PageIntroduction(pdf)
+	NewPageText(pdf, "Ontem foi um dia daqueles que o mundo parecia se encontrar em perfeita harmonia, como eu poderia descrever a sensação de estar tudo dando certo. Para aqueles que um dia pensaram em desistir, saiba que vale a pena, mesmo se não valer, poderá dizer que aguentou até o fim.")
+	NewPageImg(pdf, "./img/lendo_livro.jpg")
 
-	historyTitle := `Contos do GPT`
-	history := `Era uma vez uma pequena cidade chamada Serenidade, onde as pessoas viviam suas vidas tranquilas. No centro da cidade, havia uma loja de presentes chamada "Surpresas Mágicas", conhecida por suas ofertas especiais. Em uma manhã ensolarada, Maria, uma jovem moradora de Serenidade, entrou na loja em busca de um presente de aniversário para sua avó. Ela examinou os prateleiras, mas nada parecia especial o suficiente para a pessoa que tanto amava. O proprietário da loja, Sr. Higgins, percebeu a hesitação de Maria e se aproximou com um sorriso amigável. Ele sugeriu que ela desse à avó um livro de histórias antigas, cheio de memórias e aventuras compartilhadas. Maria seguiu o conselho de Sr. Higgins e escolheu um livro de histórias. Ela escreveu uma mensagem amorosa na primeira página e entregou o presente à sua avó no dia de seu aniversário. À noite, as duas se aconchegaram na sala de estar, lendo as histórias juntas. A avó de Maria sorriu e disse que era o presente mais especial que já recebera, pois continha as lembranças de sua família. E assim, a história de Maria e sua avó se tornou parte das histórias antigas do livro, um testemunho do amor e da conexão entre as gerações.`
+	err := pdf.OutputFileAndClose("exemplo.pdf")
 
-	newPagTextSimple(pdf, historyTitle, history)
-	newPagImg(pdf, "./img/lendo_livro.jpg", "1.1 - Maria e sua Avó")
-
-	pdf.OutputFileAndClose("exemplo.pdf")
+	if err != nil {
+		fmt.Println(err)
+	}
 }
