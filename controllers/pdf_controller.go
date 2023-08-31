@@ -2,12 +2,15 @@ package controllers
 
 import (
 	"fmt"
+	"image"
+	"os"
 
 	"github.com/jung-kurt/gofpdf"
 )
 
 var pageWidth = 210.0
 var pageHeight = 297.0
+var scale float64
 
 var marginLeft = 30.0
 var marginRight = 30.0
@@ -97,13 +100,30 @@ func NewPagImg(pdf *gofpdf.Fpdf, imgPath string, description string) {
 
 	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
 
+	imageWidth, imageHeight := getImageDimension(imgPath)
+
+	if imageWidth/pageWidth > imageHeight/pageHeight {
+		scale = (pageWidth / imageWidth) / 1.2
+	} else {
+		scale = (pageHeight / imageHeight) / 1.2
+	}
+
+	newImgWidth := imageWidth * scale
+	newImgHeight := imageHeight * scale
+
+	marginPageWidth := pageWidth - 2*marginRight
+	marginPageHeight := pageHeight - 2*marginTop
+
+	x_center := ((marginPageWidth - newImgWidth) / 2) + marginLeft
+	y_center := ((marginPageHeight - newImgHeight) / 2) + marginTop
+
 	numberPage++
 	pdf.Text(105, 290, fmt.Sprint(numberPage))
 	pdf.SetMargins(marginLeft, marginTop, marginRight)
 
-	pdf.Image(imgPath, marginLeft+5, marginTop, 150, 150, true, "", 0, "")
+	pdf.Image(imgPath, x_center, y_center, newImgWidth, newImgHeight, true, "", 0, "")
 	pdf.SetFont(font, "I", 12)
-	pdf.Text(marginLeft+10, 175, utf_8(description))
+	pdf.Text(marginLeft, newImgHeight+35, utf_8(description))
 }
 
 func AddBlockText(pdf *gofpdf.Fpdf, text string, y float64, yPage float64) {
@@ -117,4 +137,19 @@ func AddBlockText(pdf *gofpdf.Fpdf, text string, y float64, yPage float64) {
 	pdf.SetY(yPage)
 	pdf.MultiCell(0, y, utf_8(text), "", "L", false)
 
+}
+
+func getImageDimension(imagePath string) (float64, float64) {
+	file, err := os.Open(imagePath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+	}
+
+	defer file.Close()
+
+	image, _, err := image.DecodeConfig(file)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s: %v\n", imagePath, err)
+	}
+	return float64(image.Width), float64(image.Height)
 }
