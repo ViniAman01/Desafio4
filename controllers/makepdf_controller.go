@@ -9,7 +9,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-var pdf = gofpdf.New("P", "mm", "A4", "")
+var pdf = gofpdf.NewCustom(&gofpdf.InitType{
+	Size: gofpdf.SizeType{
+		Wd: pageWidth,
+		Ht: pageHeight,
+	},
+})
 
 var client = db.ConnectDB()
 var coll = db.GetCollection("mainDB2", "collteste", client)
@@ -18,7 +23,7 @@ func CoverHandler() {
 	imagemcapa := "./static/estante01.jpg"
 	title := "ESTANTE MÁGICA"
 
-	Capa(pdf, title, imagemcapa)
+	PageCover(pdf, title, imagemcapa)
 	PageIntroduction(pdf)
 }
 
@@ -35,19 +40,19 @@ func PageHandler(code_book string) {
 			fmt.Println(media.Data_type)
 
 			if media.Data_type == "text" {
-				NewPagTextSimple(pdf, media.Data)
+				NewPageText(pdf, media.Data)
 			}
 
 			if media.Data_type == "image" {
 				fmt.Println(media.Data)
-				NewPagImg(pdf, media.Data, "")
+				NewPageImg(pdf, media.Data)
 			}
 		} else {
 			fmt.Println(err)
 		}
 	}
 
-  PageBiography(pdf, "Autor desconhecido")
+	PageBiography(pdf, "Autor desconhecido")
 
 	err := pdf.OutputFileAndClose("exemplo.pdf")
 
