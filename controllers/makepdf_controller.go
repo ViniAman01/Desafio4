@@ -17,10 +17,8 @@ var coll = db.GetCollection("mainDB2", "collteste", client)
 func CoverHandler() {
 	imagemcapa := "./static/estante01.jpg"
 	title := "ESTANTE MÁGICA"
-	subtitle := "Ler e Sonhar"
-	author := "Equipe Estante Mágica"
 
-	Capa(pdf, title, subtitle, author, imagemcapa)
+	Capa(pdf, title, imagemcapa)
 	PageIntroduction(pdf)
 }
 
@@ -37,7 +35,7 @@ func PageHandler(code_book string) {
 			fmt.Println(media.Data_type)
 
 			if media.Data_type == "text" {
-				NewPagTextSimple(pdf, " ", media.Data)
+				NewPagTextSimple(pdf, media.Data)
 			}
 
 			if media.Data_type == "image" {

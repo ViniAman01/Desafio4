@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+
 	"github.com/jung-kurt/gofpdf"
 )
 
@@ -11,12 +12,11 @@ var pageHeight = 297.0
 var marginLeft = 30.0
 var marginRight = 30.0
 var marginTop = 30.0
-var marginLow = 30.0
 
 var numberPage = 1
 var font = "times"
 
-func Capa(pdf *gofpdf.Fpdf, title string, subtitle string, author string, img string) {
+func Capa(pdf *gofpdf.Fpdf, title string, img string) {
 
 	pdf.AddPage()
 	pdf.ImageOptions(img, 0, 0, pageWidth, pageHeight, false, gofpdf.ImageOptions{}, 0, "")
@@ -28,20 +28,7 @@ func Capa(pdf *gofpdf.Fpdf, title string, subtitle string, author string, img st
 	titleWidth := pdf.GetStringWidth(title)
 	Width, _ := pdf.GetPageSize()
 	center := (Width - titleWidth) / 2.0
-	pdf.Text(center, 80, utf_8(title))
-
-	pdf.SetTextColor(200, 100, 30)
-	pdf.SetFont(font, "B", 26)
-	titleWidth = pdf.GetStringWidth(subtitle)
-	center = (Width - titleWidth) / 2.0
-	pdf.Text(center, 90, utf_8(subtitle))
-
-	pdf.SetTextColor(170, 100, 10)
-	pdf.SetFont(font, "I", 16)
-	titleWidth = pdf.GetStringWidth(author)
-	center = (Width - titleWidth) / 2.0
-	pdf.Text(center, 250, utf_8(author))
-
+	pdf.Text(center, 90, utf_8(title))
 }
 
 func PageIntroduction(pdf *gofpdf.Fpdf) {
@@ -71,28 +58,36 @@ func PageIntroduction(pdf *gofpdf.Fpdf) {
 	pdf.Text(pageWidth/2, 290, fmt.Sprint(numberPage))
 }
 
-func NewPagTextSimple(pdf *gofpdf.Fpdf, title string, text string) {
+func PageBiography(pdf *gofpdf.Fpdf, author string) {
+
+	pdf.AddPage()
+
+	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
+
+	pdf.SetFont(font, "I", 20)
+	pdf.SetTextColor(0, 0, 0)
+
+	titleWidth := pdf.GetStringWidth(utf_8(author))
+	Width, _ := pdf.GetPageSize()
+	center := (Width - titleWidth) / 2.0
+
+	pdf.Text(center, 130, utf_8(author))
+
+}
+
+func NewPagTextSimple(pdf *gofpdf.Fpdf, text string) {
 
 	pdf.AddPage()
 
 	utf_8 := pdf.UnicodeTranslatorFromDescriptor("")
 
 	numberPage++
+	pdf.SetFont(font, "", 12)
 	pdf.Text(105, 290, fmt.Sprint(numberPage))
 	pdf.SetMargins(marginLeft, marginTop, marginRight)
 
-	pdf.SetFont(font, "B", 32)
-	pdf.SetTextColor(0, 0, 0)
-
-	titleWidth := pdf.GetStringWidth(title)
-	Width, _ := pdf.GetPageSize()
-
-	center := (Width - titleWidth) / 2.0
-
-	pdf.Text(center, 50, utf_8(title))
-
 	pdf.SetFont(font, "", 12)
-	pdf.SetY(70)
+	pdf.SetY(marginTop)
 	pdf.MultiCell(0, 5.5, utf_8(text), "", "", false)
 }
 
@@ -106,9 +101,9 @@ func NewPagImg(pdf *gofpdf.Fpdf, imgPath string, description string) {
 	pdf.Text(105, 290, fmt.Sprint(numberPage))
 	pdf.SetMargins(marginLeft, marginTop, marginRight)
 
-	pdf.Image(imgPath, 25, marginLeft+20, 160, 180, false, "", 0, "")
+	pdf.Image(imgPath, marginLeft+5, marginTop, 150, 150, true, "", 0, "")
 	pdf.SetFont(font, "I", 12)
-	pdf.Text(25, 240, utf_8(description))
+	pdf.Text(marginLeft+10, 175, utf_8(description))
 }
 
 func AddBlockText(pdf *gofpdf.Fpdf, text string, y float64, yPage float64) {
