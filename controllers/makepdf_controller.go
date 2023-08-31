@@ -40,12 +40,14 @@ func PageHandler(code_book string) {
 
 			if media.Data_type == "image" {
 				fmt.Println(media.Data)
-				NewPagImg(pdf, media.Data, "Uma legenda")
+				NewPagImg(pdf, media.Data, "")
 			}
 		} else {
 			fmt.Println(err)
 		}
 	}
+
+  PageBiography(pdf, "Autor desconhecido")
 
 	err := pdf.OutputFileAndClose("exemplo.pdf")
 
