@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"project/models"
@@ -42,28 +41,6 @@ func GetBucket(db *mongo.Database) *gridfs.Bucket {
 	}
 
 	return bucket
-}
-
-func InsertColl(coll *mongo.Collection, media models.Media) *mongo.InsertOneResult {
-	result, err := coll.InsertOne(context.Background(), media)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return result
-}
-
-func UploadFile(bucket *gridfs.Bucket, path string, name string) primitive.ObjectID {
-	file, err := os.Open(path)
-
-	ObjectID, err := bucket.UploadFromStream(name, io.Reader(file))
-
-	if err != nil {
-		panic(err)
-	}
-
-	return ObjectID
 }
 
 func DownloadFile(bucket gridfs.Bucket, idFile string, name string) {
